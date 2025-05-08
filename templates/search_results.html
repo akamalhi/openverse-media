@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+  /* Masonry Grid Responsive Columns */
+  @media (max-width: 768px) {
+    .masonry-container {
+      column-count: 1;
+    }
+  }
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .masonry-container {
+      column-count: 2;
+    }
+  }
+  @media (min-width: 1025px) {
+    .masonry-container {
+      column-count: 3;
+    }
+  }
+
+  .hero {
+    background: linear-gradient(135deg, #f0f4ff, #e3f2fd);
+    padding: 80px 0;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1a237e;
+  }
+
+  .hero p {
+    color: #5c6bc0;
+    font-size: 1.1rem;
+    max-width: 700px;
+    margin: 0 auto 30px;
+  }
+
+  .search-form .form-control,
+  .search-form .form-select {
+    border-radius: 0.5rem;
+  }
+
+  .search-form .btn {
+    border-radius: 0.5rem;
+  }
+
+  /* Image Cards */
+  .image-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+  }
+
+  .image-card img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 1rem;
+    transition: transform 0.3s ease;
+  }
+
+  .image-card:hover img {
+    transform: scale(1.02);
+  }
+
+  .image-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(1, 3, 6, 0.5);
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    border-radius: 1rem;
+  }
+
+  .image-card:hover .image-overlay {
+    opacity: 1;
+  }
+
+  .image-overlay h6 {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .image-overlay small {
+    font-size: 0.8rem;
+  }
+
+  .image-overlay a.btn {
+    margin-top: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+  }
+</style>
+
+<!-- Hero + Search Section -->
+<section class="hero shadow-sm">
+  <div class="container">
+    <h1 class="mb-3">Explore Open-Licensed Images</h1>
+    <p>Powerful search experience using Openverse. Filter by license and type — reuse legally and freely.</p>
+
+    <form method="GET" action="{% url 'search_media' %}" class="row g-3 justify-content-center align-items-end search-form">
+      <div class="col-md-6">
+        <input type="text" name="q" class="form-control form-control-lg shadow-sm" placeholder="Try 'sunset', 'birds -pigeon', 'Claude Monet'..." value="{{ query }}" required>
+      </div>
+
+      <div class="col-md-2">
+        <select name="license" class="form-select form-select-lg shadow-sm">
+          <option value="">License</option>
+          <option value="cc0" {% if request.GET.license == 'cc0' %}selected{% endif %}>CC0</option>
+          <option value="pdm" {% if request.GET.license == 'pdm' %}selected{% endif %}>PDM</option>
+          <option value="by" {% if request.GET.license == 'by' %}selected{% endif %}>CC BY</option>
+          <option value="by-sa" {% if request.GET.license == 'by-sa' %}selected{% endif %}>CC BY-SA</option>
+          <option value="by-nd" {% if request.GET.license == 'by-nd' %}selected{% endif %}>CC BY-ND</option>
+          <option value="by-nc" {% if request.GET.license == 'by-nc' %}selected{% endif %}>CC BY-NC</option>
+        </select>
+      </div>
+
+      <div class="col-md-2">
+        <select name="extension" class="form-select form-select-lg shadow-sm">
+          <option value="">Type</option>
+          <option value="jpg" {% if request.GET.extension == 'jpg' %}selected{% endif %}>JPG</option>
+          <option value="png" {% if request.GET.extension == 'png' %}selected{% endif %}>PNG</option>
+          <option value="svg" {% if request.GET.extension == 'svg' %}selected{% endif %}>SVG</option>
+        </select>
+      </div>
+
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-primary btn-lg w-100 shadow">Search</button>
+      </div>
+    </form>
+
+    <p class="mt-3 small text-muted">
+      Advanced: use <code>"exact phrases"</code>, <code>cat|dog</code>, <code>theatre~1</code>, or <code>bird -pigeon</code>
+    </p>
+  </div>
+</section>
+
+<!-- Results Section -->
+<div class="container py-5">
+  <h4 class="mb-4 text-dark">Results for: <span class="text-primary">{{ query }}</span></h4>
+
+  {% if error %}
+    <div class="alert alert-danger shadow-sm">{{ error }}</div>
+  {% elif results %}
+    <div class="masonry-container">
+      {% for item in results %}
+        <div class="mb-4 d-inline-block w-100">
+          <div class="image-card shadow-sm">
+            <img src="{{ item.thumbnail|default:item.url }}" alt="{{ item.title }}">
+            <div class="image-overlay">
+              <h6>{{ item.title|default:"Untitled" }}</h6>
+              <small>
+                {% if item.creator_url %}
+                  <a href="{{ item.creator_url }}" class="text-white text-decoration-underline" target="_blank">{{ item.creator }}</a>
+                {% else %}
+                  Unknown
+                {% endif %}
+              </small>
+              <small class="text-white-50">{{ item.license|upper }}</small>
+              <a href="{{ item.foreign_landing_url }}" target="_blank" class="btn btn-outline-light btn-sm mt-2">View Original</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info shadow-sm">No results found. Try different keywords.</div>
+  {% endif %}
+</div>
+
+{% endblock %}

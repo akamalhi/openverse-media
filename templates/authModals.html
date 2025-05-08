@@ -1,0 +1,59 @@
+<!-- Register Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4 shadow">
+      <div class="modal-header">
+        <h5 class="modal-title" id="registerModalLabel">Create an Account</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form method="POST" action="{% url 'register' %}">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="fullname" class="form-label">Full Name</label>
+            <input type="text" name="fullname" class="form-control" id="fullname" required>
+          </div>
+          <div class="mb-3">
+            <label for="email_register" class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" id="email_register" required>
+          </div>
+          <div class="mb-3">
+            <label for="password_register" class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" id="password_register" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary w-100">Register</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Login Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4 shadow">
+      <div class="modal-header">
+        <h5 class="modal-title" id="loginModalLabel">Login to Your Account</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form method="POST" action="{% url 'login' %}">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="email_login" class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" id="email_login" required>
+          </div>
+          <div class="mb-3">
+            <label for="password_login" class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" id="password_login" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success w-100">Login</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+  .profile-card {
+    background: linear-gradient(to right, #e3f2fd, #f0f4ff);
+    border-left: 5px solid #2196f3;
+    border-radius: 1rem;
+  }
+  .profile-card h5 {
+    color: #0d47a1;
+  }
+  .table-wrapper {
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  }
+  .table th {
+    background-color: #e3f2fd;
+    font-weight: 600;
+  }
+</style>
+
+<div class="container py-5">
+  <h2 class="mb-4 fw-bold">Your Profile</h2>
+
+  <div class="row g-4">
+    <!-- Left: User Info -->
+    <div class="col-md-4">
+      <div class="card profile-card shadow-sm p-4 text-center">
+        <i class="bi bi-person-circle fs-1 mb-3"></i>
+        <h5>{{ request.user.get_full_name|default:request.user.username }}</h5>
+        <p class="mb-1 text-muted"><i class="bi bi-envelope"></i> {{ request.user.email }}</p>
+        {% if request.user.phone %}
+          <p class="mb-1 text-muted"><i class="bi bi-telephone"></i> {{ request.user.phone }}</p>
+        {% endif %}
+        {% if request.user.address %}
+          <p class="mb-0 text-muted"><i class="bi bi-geo-alt"></i> {{ request.user.address }}</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Right: Search History -->
+    <div class="col-md-8">
+      <div class="table-wrapper bg-white">
+        <div class="px-4 pt-4 pb-2 border-bottom">
+          <h5 class="fw-bold"><i class="bi bi-clock-history me-2"></i>Recent Searches</h5>
+        </div>
+        {% if searches %}
+          <div class="table-responsive">
+            <table class="table table-striped mb-0 align-middle">
+              <thead>
+                <tr>
+                  <th>Query</th>
+                  <th>Date</th>
+                  <th class="text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for search in searches %}
+                  <tr>
+                    <td>{{ search.query }}</td>
+                    <td>{{ search.timestamp|date:"M d, Y H:i" }}</td>
+                    <td class="text-end">
+                      <a href="{% url 'search_media' %}?q={{ search.query }}" class="btn btn-sm btn-outline-primary me-1" title="View again">
+                        <i class="bi bi-search"></i>
+                      </a>
+                      <form method="POST" action="{% url 'delete_search' search.id %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </form>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <div class="p-3">
+            {% if searches.has_other_pages %}
+              <nav>
+                <ul class="pagination justify-content-end mb-0">
+                  {% if searches.has_previous %}
+                    <li class="page-item">
+                      <a class="page-link" href="?page={{ searches.previous_page_number }}">Previous</a>
+                    </li>
+                  {% endif %}
+                  {% for i in searches.paginator.page_range %}
+                    <li class="page-item {% if searches.number == i %}active{% endif %}">
+                      <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                    </li>
+                  {% endfor %}
+                  {% if searches.has_next %}
+                    <li class="page-item">
+                      <a class="page-link" href="?page={{ searches.next_page_number }}">Next</a>
+                    </li>
+                  {% endif %}
+                </ul>
+              </nav>
+            {% endif %}
+          </div>
+        {% else %}
+          <div class="p-4 text-muted">No search history yet.</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

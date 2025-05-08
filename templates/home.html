@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+  .hero {
+    background: linear-gradient(to right, #f8f9fa, #e9ecef);
+    padding: 100px 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero h1 {
+    font-size: 3rem;
+    font-weight: 700;
+  }
+
+  .hero p {
+    font-size: 1.25rem;
+    color: #6c757d;
+  }
+
+  .fade-in {
+    animation: fadeInUp 1s ease forwards;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .how-it-works {
+    padding: 80px 0;
+    background: #fff;
+    text-align: center;
+  }
+
+  .how-it-works .box {
+    padding: 30px;
+    border-radius: 1rem;
+    box-shadow: 0 0.125rem 1rem rgba(0, 0, 0, 0.1);
+    background-color: #f8f9fa;
+    transition: transform 0.3s ease;
+  }
+
+  .how-it-works .box:hover {
+    transform: translateY(-5px);
+  }
+</style>
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+      <small>Version 01</small>
+      <h1 class="mb-4 fade-in fw-bold">Discover Free-to-Use Images Instantly</h1>
+      <p class="mb-5 fade-in text-muted">Search high-quality open-license media from Openverse with powerful filters.</p>
+  
+      <form method="GET" action="{% url "search_media" %}" class="row justify-content-center align-items-end g-3 fade-in">
+        <div class="col-md-6">
+          <input type="text" name="q" class="form-control form-control-lg shadow-sm" placeholder="e.g. mountain sunset, cat -pug, 'Claude Monet'" required>
+        </div>
+  
+        <div class="col-md-2">
+          <select name="license" class="form-select form-select-lg shadow-sm">
+            <option value="">Any License</option>
+            <option value="cc0">CC0</option>
+            <option value="pdm">PDM</option>
+            <option value="by">CC BY</option>
+            <option value="by-sa">CC BY-SA</option>
+            <option value="by-nd">CC BY-ND</option>
+            <option value="by-nc">CC BY-NC</option>
+          </select>
+        </div>
+  
+        <div class="col-md-2">
+          <select name="extension" class="form-select form-select-lg shadow-sm">
+            <option value="">All Types</option>
+            <option value="jpg">JPG</option>
+            <option value="png">PNG</option>
+            <option value="svg">SVG</option>
+          </select>
+        </div>
+  
+        <div class="col-md-2">
+          <button type="submit" class="btn btn-primary btn-lg w-100 shadow">Search</button>
+        </div>
+      </form>
+  
+      <p class="mt-3 small text-muted fade-in">
+        Use advanced search like <code>dog|cat</code>, <code>theatre~1</code>, or <code>"Claude Monet"</code>
+      </p>
+    </div>
+  </section>
+  
+
+<!-- How It Works Section -->
+<section class="how-it-works">
+  <div class="container">
+    <h2 class="mb-5 fw-bold">How It Works</h2>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="box h-100">
+          <h4 class="mb-3">1. Enter Search Keywords</h4>
+          <p>Type what you want to find — like “cat”, “mountains”, or “sunset”. Add filters to refine results.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="box h-100">
+          <h4 class="mb-3">2. Browse Openverse Results</h4>
+          <p>We instantly fetch images from the Openverse API. See thumbnails, creators, and license info.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="box h-100">
+          <h4 class="mb-3">3. Use & Save Media</h4>
+          <p>Click to view and use. If you're logged in, your search is saved for easy access later.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

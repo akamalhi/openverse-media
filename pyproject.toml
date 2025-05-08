@@ -1,0 +1,12 @@
+[project]
+name = "open-verse-media"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "django==4.2",
+    "django-cors-headers>=4.7.0",
+    "django-jazzmin>=3.0.1",
+    "requests>=2.32.3",
+]
